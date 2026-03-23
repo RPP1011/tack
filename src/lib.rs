@@ -34,6 +34,11 @@ mod widgets;
 
 pub use app::TackConfig;
 pub use ui::TackUi;
+pub use widgets::ScatterGroup;
+
+// Re-export common egui types so users don't need a direct egui dependency.
+pub use egui::Color32;
+pub use egui::Vec2;
 
 /// Run a Tack app with the given title and render function.
 ///

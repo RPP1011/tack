@@ -181,6 +181,42 @@ impl<'a> TackUi<'a> {
         widgets::scatter(self.ui, label, points);
     }
 
+    // ── Latent Space / Embedding Visualization ─────────────────
+
+    /// Colored scatter plot with multiple labeled groups.
+    /// Ideal for t-SNE/UMAP projections with cluster labels.
+    pub fn scatter_colored(&mut self, id: &str, groups: &[widgets::ScatterGroup], height: f32) {
+        widgets::scatter_colored(self.ui, id, groups, height);
+    }
+
+    /// Heatmap grid. `data` is row-major (length = rows * cols).
+    /// Values are color-mapped between `min_val` and `max_val`.
+    /// Use for QD archives, similarity matrices, confusion matrices.
+    pub fn heatmap(&mut self, id: &str, data: &[f64], rows: usize, cols: usize, min_val: f64, max_val: f64, height: f32) {
+        widgets::heatmap(self.ui, id, data, rows, cols, min_val, max_val, height);
+    }
+
+    /// 2D draggable pad. Returns `(x, y)` in the given ranges.
+    /// Use for navigating a 2D latent space, interpolation planes, etc.
+    pub fn pad_2d(&mut self, id: &str, x_range: (f64, f64), y_range: (f64, f64), size: f32) -> (f64, f64) {
+        widgets::pad_2d(self.ui, self.state, id, x_range, y_range, size)
+    }
+
+    /// Clickable image grid. Returns index of clicked cell (if any).
+    /// `cell_render` draws each cell given its index and an `egui::Ui`.
+    pub fn image_grid<F>(&mut self, id: &str, cols: usize, count: usize, cell_size: egui::Vec2, cell_render: F) -> Option<usize>
+    where
+        F: FnMut(usize, &mut egui::Ui),
+    {
+        widgets::image_grid(self.ui, id, cols, count, cell_size, cell_render)
+    }
+
+    /// Panel of N sliders for controlling latent dimensions.
+    /// Returns a Vec of current values. Optionally provide semantic labels.
+    pub fn latent_sliders(&mut self, id: &str, count: usize, range: (f64, f64), labels: Option<&[&str]>) -> Vec<f64> {
+        widgets::latent_sliders(self.ui, self.state, id, count, range, labels)
+    }
+
     // ── Notifications ─────────────────────────────────────────
 
     /// Green success banner.
