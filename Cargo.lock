@@ -3043,6 +3043,7 @@ dependencies = [
  "egui_extras",
  "egui_plot",
  "image",
+ "serde_json",
 ]
 
 [[package]]
