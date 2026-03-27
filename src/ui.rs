@@ -249,6 +249,34 @@ impl<'a> TackUi<'a> {
         widgets::columns(self.ui, count, f);
     }
 
+    /// Two-column layout where each column gets a `TackUi`.
+    ///
+    /// ```no_run
+    /// # tack::run("test", |ui| {
+    /// ui.two_columns(|left, right| {
+    ///     left.header("Left");
+    ///     left.text("Left content");
+    ///     right.header("Right");
+    ///     right.code("right content");
+    /// });
+    /// # });
+    /// ```
+    pub fn two_columns<F>(&mut self, f: F)
+    where
+        F: FnOnce(&mut TackUi, &mut TackUi),
+    {
+        // Split the state pointer using unsafe to allow two simultaneous TackUi borrows.
+        // This is safe because widgets use string-keyed state lookups, so two columns
+        // won't interfere as long as they use different widget IDs.
+        let state_ptr = self.state as *mut WidgetState;
+        self.ui.columns(2, |cols| {
+            let (left_col, right_col) = cols.split_at_mut(1);
+            let mut left = TackUi { ui: &mut left_col[0], state: unsafe { &mut *state_ptr } };
+            let mut right = TackUi { ui: &mut right_col[0], state: unsafe { &mut *state_ptr } };
+            f(&mut left, &mut right);
+        });
+    }
+
     /// Collapsible/expandable section.
     pub fn expander<F>(&mut self, label: &str, default_open: bool, f: F)
     where

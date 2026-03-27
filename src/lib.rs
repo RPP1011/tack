@@ -36,7 +36,8 @@ pub use app::TackConfig;
 pub use ui::TackUi;
 pub use widgets::ScatterGroup;
 
-// Re-export common egui types so users don't need a direct egui dependency.
+// Re-export egui so users can access it for advanced widgets.
+pub use egui;
 pub use egui::Color32;
 pub use egui::Vec2;
 
