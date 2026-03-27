@@ -60,6 +60,11 @@ impl<'a> TackUi<'a> {
         widgets::divider(self.ui);
     }
 
+    /// Set a float state value by key (for programmatic control of sliders/latent dims).
+    pub fn set_f64(&mut self, key: &str, value: f64) {
+        self.state.set_f64(key, value);
+    }
+
     /// Add vertical spacing.
     pub fn space(&mut self, amount: f32) {
         self.ui.add_space(amount);
